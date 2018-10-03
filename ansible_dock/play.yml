@@ -1,0 +1,17 @@
+---
+- name: creator
+  hosts: localhost
+  tasks:
+   - name: start a container
+     docker_container:
+       name: app
+       image: eg_sshd
+       recreate: yes
+       restart: yes
+       ports:
+          - "80:80"
+          - "22:22"
+   - name: Execute commands in docker container    
+     command: docker exec -i app /bin/sh -c 'apt install nginx -y'
+   - name: Final work 
+     command: docker exec -i app /bin/sh -c 'cp /tmp/index.php /var/www/html/index.php && cp /tmp/default /etc/nginx/sites-available/default && service nginx restart && service php7.0-fpm restart' 
